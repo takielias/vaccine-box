@@ -78,6 +78,20 @@ class VaccineRegistrationRepository implements VaccineRegistrationRepositoryInte
             });
     }
 
+    function getVaccinationReminderEmails(Carbon $tomorrow): \Illuminate\Database\Eloquent\Collection
+    {
+        return Vaccination::with('user')
+            ->whereDate('vaccination_date', $tomorrow->toDateString())
+            ->where('status', 'scheduled')
+            ->get();
+    }
+    public function countPriorVaccinations(Vaccination $vaccination): int
+    {
+        return Vaccination::where('vaccination_center_id', $vaccination->vaccination_center_id)
+            ->whereDate('vaccination_date', $vaccination->vaccination_date)
+            ->where('id', '<', $vaccination->id)
+            ->count();
+    }
     function getVaccinationStatus($nid)
     {
         // TODO: Implement getVaccinationStatus() method.

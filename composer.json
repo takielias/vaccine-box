@@ -9,6 +9,7 @@
         "konekt/html": "^6.5",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
+        "resend/resend-laravel": "^0.14.0",
         "takielias/lab": "^0.6.0",
         "takielias/tablar": "^11"
     },

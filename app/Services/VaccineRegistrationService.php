@@ -7,7 +7,7 @@ use App\Contracts\Services\VaccineRegistrationServiceInterface;
 use App\Enums\VaccinationStatus;
 use App\Exceptions\NoAvailableDatesException;
 use App\Exceptions\RegistrationFailedException;
-use Illuminate\Http\JsonResponse;
+use Carbon\CarbonInterface;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
 use Takielias\Lab\Facades\Lab;
@@ -65,8 +65,20 @@ readonly class VaccineRegistrationService implements VaccineRegistrationServiceI
 
     function getNextAvailableVaccinationDate($centerId, ?Carbon $startDate = null): ?Carbon
     {
-        $startDate = $startDate ?? Carbon::now();
-        $endDate = $startDate->copy()->addDays(env('VACCINE_SCHEDULE_WINDOW_DAYS', 90)); // Look up to 90 days in the future
+
+        $now = Carbon::now();
+        $startDate = $startDate ?? $now;
+
+        if ($now->hour >= 9) {
+            $startDate = $startDate->addDay();
+        }
+
+        // Skip Friday (5) and Saturday (6)
+        while ($startDate->dayOfWeek === CarbonInterface::FRIDAY || $startDate->dayOfWeek === CarbonInterface::SATURDAY) {
+            $startDate->addDay();
+        }
+
+        $endDate = $startDate->copy()->addDays((int)env('VACCINE_SCHEDULE_WINDOW_DAYS', 90)); // Look up to 90 days in the future
 
         $center = $this->vaccineRegistrationRepository->getVaccinationCenter($centerId);
         $availableDates = $this->vaccineRegistrationRepository->getVaccinationCountsByDateRange($centerId, $startDate, $endDate);
@@ -75,7 +87,7 @@ readonly class VaccineRegistrationService implements VaccineRegistrationServiceI
         if ($availableDates->isEmpty()) {
             $currentDate = $startDate->copy();
             while ($currentDate <= $endDate) {
-                if ($currentDate->dayOfWeek !== 5 && $currentDate->dayOfWeek !== 6) {
+                if ($currentDate->dayOfWeek !== CarbonInterface::FRIDAY && $currentDate->dayOfWeek !== CarbonInterface::SATURDAY) {
                     return $currentDate;
                 }
                 $currentDate->addDay();
