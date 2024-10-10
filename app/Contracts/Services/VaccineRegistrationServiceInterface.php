@@ -11,4 +11,6 @@ interface VaccineRegistrationServiceInterface
     public function getVaccinationCenters();
 
     public function getNextAvailableVaccinationDate($centerId, ?Carbon $startDate = null): ?Carbon;
+
+    public function getVaccinationStatus($nid);
 }

@@ -11,7 +11,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class VaccineRegistrationRepository implements VaccineRegistrationRepositoryInterface
@@ -66,7 +65,7 @@ class VaccineRegistrationRepository implements VaccineRegistrationRepositoryInte
         return VaccinationCenter::all()->pluck('name', 'id')->prepend('Please Select Center', '');
     }
 
-    function getVaccinationCountsByDateRange(int $centerId, Carbon $startDate, Carbon $endDate): Collection
+    function getVaccinationCountsByDateRange($centerId, Carbon $startDate, Carbon $endDate): Collection
     {
         return DB::table('vaccinations')
             ->select(DB::raw('vaccination_date, COUNT(*) as scheduled_count'))
@@ -79,4 +78,9 @@ class VaccineRegistrationRepository implements VaccineRegistrationRepositoryInte
             });
     }
 
+    function getVaccinationStatus($nid)
+    {
+        // TODO: Implement getVaccinationStatus() method.
+        return User::whereNid($nid)->first();
+    }
 }

@@ -11,5 +11,7 @@ interface VaccineRegistrationRepositoryInterface
 
     function getVaccinationCenters();
 
-    function getVaccinationCountsByDateRange(int $centerId, Carbon $startDate, Carbon $endDate): Collection;
+    function getVaccinationCountsByDateRange($centerId, Carbon $startDate, Carbon $endDate): Collection;
+
+    function getVaccinationStatus($nid);
 }

@@ -6,6 +6,7 @@ use App\Contracts\Services\VaccineRegistrationServiceInterface;
 use App\Exceptions\NoAvailableDatesException;
 use App\Exceptions\RegistrationFailedException;
 use App\Http\Requests\VaccineRegistrationRequest;
+use App\Http\Requests\ValidVaccinationStatusSearchRequest;
 use Takielias\Lab\Facades\Lab;
 
 class VaccinationController extends Controller
@@ -23,32 +24,17 @@ class VaccinationController extends Controller
     function proceedRegistration(VaccineRegistrationRequest $request)
     {
         $validated = $request->validated();
-        try {
-            $result = $this->vaccineRegistration->register($validated);
-            return Lab::setData([
-                'success' => true,
-                'user' => $result['user'],
-                'vaccination' => $result['vaccination']
-            ])
-                ->enableScrollToTop()
-                ->setSuccess('Vaccine registration is Successful.')
-                ->setStatus(201)
-                ->setRedirect(route('welcome'))
-                ->setFadeOutTime(5000)
-                ->setRedirectDelay(5500)
-                ->toJsonResponse();
-        } catch (NoAvailableDatesException $e) {
-            return Lab::setData(['success' => false])
-                ->enableScrollToTop()
-                ->setDanger($e->getMessage())
-                ->setStatus(400)
-                ->toJsonResponse();
-        } catch (RegistrationFailedException $e) {
-            return Lab::setData(['success' => false])
-                ->enableScrollToTop()
-                ->setDanger($e->getMessage())
-                ->setStatus(500)
-                ->toJsonResponse();
-        }
+        return $this->vaccineRegistration->register($validated);
+    }
+
+    function vaccinationStatus()
+    {
+        return view('vaccination.status');
+    }
+
+    function searchVaccinationStatus(ValidVaccinationStatusSearchRequest $request)
+    {
+        $validated = $request->validated();
+        return $this->vaccineRegistration->getVaccinationStatus($validated);
     }
 }

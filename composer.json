@@ -9,7 +9,7 @@
         "konekt/html": "^6.5",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
-        "takielias/lab": "^0.4.0",
+        "takielias/lab": "^0.6.0",
         "takielias/tablar": "^11"
     },
     "require-dev": {

@@ -151,8 +151,14 @@ return [
         ],
         [
             'text' => 'Registration',
-            'icon' => 'ti ti-pen',
+            'icon' => 'ti ti-user-plus',
             'route' => 'vaccine-registration'
+        ],
+
+        [
+            'text' => 'Vaccination Status',
+            'icon' => 'ti ti-status-change',
+            'route' => 'vaccination-status'
         ],
 
     ],

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "65ffa9bd205c5e893fa24ac1bbe20b3f",
+    "content-hash": "e681932d40804aeb61d7799498a5a508",
     "packages": [
         {
             "name": "brick/math",
@@ -5486,16 +5486,16 @@
         },
         {
             "name": "takielias/lab",
-            "version": "0.4",
+            "version": "0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/takielias/laravel-ajax-builder.git",
-                "reference": "54e13ff29028a7f416649c7c17563f3d25614d3d"
+                "reference": "10526ca19da5fef2011677e2ce66ad642c5cad95"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/takielias/laravel-ajax-builder/zipball/54e13ff29028a7f416649c7c17563f3d25614d3d",
-                "reference": "54e13ff29028a7f416649c7c17563f3d25614d3d",
+                "url": "https://api.github.com/repos/takielias/laravel-ajax-builder/zipball/10526ca19da5fef2011677e2ce66ad642c5cad95",
+                "reference": "10526ca19da5fef2011677e2ce66ad642c5cad95",
                 "shasum": ""
             },
             "require": {
@@ -5540,9 +5540,9 @@
             ],
             "support": {
                 "issues": "https://github.com/takielias/laravel-ajax-builder/issues",
-                "source": "https://github.com/takielias/laravel-ajax-builder/tree/0.4"
+                "source": "https://github.com/takielias/laravel-ajax-builder/tree/0.6"
             },
-            "time": "2024-08-04T09:44:21+00:00"
+            "time": "2024-10-10T09:27:49+00:00"
         },
         {
             "name": "takielias/tablar",

@@ -2,6 +2,10 @@
 if (!function_exists('formatPhoneNumber')) {
     function formatPhoneNumber($phone): string
     {
+        // Check if the phone number contains only digits, plus sign, hyphens, and spaces
+        if (!preg_match('/^[0-9+\s-]+$/', $phone)) {
+            return "NO";
+        }
         // Remove any non-numeric characters
         $phone = preg_replace('/\D/', '', $phone);
         // Ensure the remaining string is numeric

@@ -15,7 +15,7 @@ class VaccinationCenterSeeder extends Seeder
         // Optionally, you can create some centers with specific attributes
         VaccinationCenter::factory()->create([
             'name' => 'Central City Vaccination Hub',
-            'daily_capacity' => 2,
+            'daily_capacity' => 1,
         ]);
 
         VaccinationCenter::factory()->create([

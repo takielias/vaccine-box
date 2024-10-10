@@ -10,5 +10,17 @@ class Vaccination extends Model
 {
     use HasFactory, HasUlids;
 
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'vaccination_date' => 'datetime',
+        ];
+    }
+
     protected $fillable = ['user_id', 'vaccination_center_id', 'vaccination_date'];
 }
