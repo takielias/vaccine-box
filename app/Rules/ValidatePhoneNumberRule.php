@@ -15,7 +15,6 @@ class ValidatePhoneNumberRule implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        Log::info($value);
         if (formatPhoneNumber($value) == 'NO') {
             $fail('The :attribute must be a valid Bangladeshi phone number.');
         }

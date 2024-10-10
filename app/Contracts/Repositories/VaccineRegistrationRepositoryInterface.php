@@ -2,7 +2,7 @@
 
 namespace App\Contracts\Repositories;
 
-use App\Models\VaccinationCenter;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Carbon;
 
 interface VaccineRegistrationRepositoryInterface
@@ -11,5 +11,5 @@ interface VaccineRegistrationRepositoryInterface
 
     function getVaccinationCenters();
 
-    function getNextAvailableVaccinationDate($centerId, ?Carbon $startDate = null): ?Carbon;
+    function getVaccinationCountsByDateRange(int $centerId, Carbon $startDate, Carbon $endDate): Collection;
 }

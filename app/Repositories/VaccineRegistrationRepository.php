@@ -7,13 +7,20 @@ use App\Exceptions\RegistrationFailedException;
 use App\Models\User;
 use App\Models\Vaccination;
 use App\Models\VaccinationCenter;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class VaccineRegistrationRepository implements VaccineRegistrationRepositoryInterface
 {
+
+    public function getVaccinationCenter($centerId)
+    {
+        return VaccinationCenter::find($centerId);
+    }
 
     /**
      * @throws RegistrationFailedException
@@ -59,34 +66,17 @@ class VaccineRegistrationRepository implements VaccineRegistrationRepositoryInte
         return VaccinationCenter::all()->pluck('name', 'id')->prepend('Please Select Center', '');
     }
 
-    function getNextAvailableVaccinationDate($centerId, ?Carbon $startDate = null): ?Carbon
+    function getVaccinationCountsByDateRange(int $centerId, Carbon $startDate, Carbon $endDate): Collection
     {
-        $center = VaccinationCenter::findOrFail($centerId);
-        $startDate = $startDate ?? Carbon::now()->addDays(1);
-        $endDate = $startDate->copy()->addDays(90);
-
-        $availableDates = DB::table('vaccinations')
+        return DB::table('vaccinations')
             ->select(DB::raw('vaccination_date, COUNT(*) as scheduled_count'))
-            ->where('vaccination_center_id', $center->id)
+            ->where('vaccination_center_id', $centerId)
             ->whereBetween('vaccination_date', [$startDate, $endDate])
             ->groupBy('vaccination_date')
-            ->havingRaw('scheduled_count < ?', [$center->daily_capacity])
-            ->orderBy('vaccination_date')
-            ->get();
-
-        $currentDate = $startDate->copy();
-        while ($currentDate <= $endDate) {
-            // Skip Friday (5) and Saturday (6)
-            if ($currentDate->dayOfWeek !== 5 && $currentDate->dayOfWeek !== 6) {
-                $scheduledCount = $availableDates->firstWhere('vaccination_date', $currentDate->toDateString())?->scheduled_count ?? 0;
-                if ($scheduledCount < $center->daily_capacity) {
-                    return $currentDate;
-                }
-            }
-            $currentDate->addDay();
-        }
-
-        return null; // No available dates found within the given range
+            ->get()
+            ->keyBy(function ($item) {
+                return Carbon::parse($item->vaccination_date)->toDateString();
+            });
     }
 
 }
