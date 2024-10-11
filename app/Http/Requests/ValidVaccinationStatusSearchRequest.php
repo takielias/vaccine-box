@@ -26,7 +26,7 @@ class ValidVaccinationStatusSearchRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nid' => [new ValidateNIDRule(), Rule::exists('users', 'nid')],
+            'nid' => [new ValidateNIDRule, Rule::exists('users', 'nid')],
         ];
     }
 

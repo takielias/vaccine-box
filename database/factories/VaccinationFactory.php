@@ -2,10 +2,10 @@
 
 namespace Database\Factories;
 
-use App\Models\Vaccination;
-use App\Models\User;
-use App\Models\VaccinationCenter;
 use App\Enums\VaccinationStatus;
+use App\Models\User;
+use App\Models\Vaccination;
+use App\Models\VaccinationCenter;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class VaccinationFactory extends Factory

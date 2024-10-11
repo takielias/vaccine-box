@@ -18,7 +18,7 @@ class MinimumAgeRule implements ValidationRule
     /**
      * Run the validation rule.
      *
-     * @param \Closure(string, ?string=): \Illuminate\Translation\PotentiallyTranslatedString $fail
+     * @param  \Closure(string, ?string=): \Illuminate\Translation\PotentiallyTranslatedString  $fail
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
@@ -26,6 +26,7 @@ class MinimumAgeRule implements ValidationRule
             $birthDate = Carbon::parse($value);
         } catch (\Exception $e) {
             $fail("The {$attribute} is not a valid date.");
+
             return;
         }
 

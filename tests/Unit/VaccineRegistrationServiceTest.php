@@ -4,24 +4,24 @@ namespace Tests\Unit;
 
 use App\Contracts\Repositories\VaccineRegistrationRepositoryInterface;
 use App\Enums\VaccinationStatus;
-use App\Exceptions\NoAvailableDatesException;
 use App\Models\User;
 use App\Models\Vaccination;
 use App\Models\VaccinationCenter;
 use App\Services\VaccineRegistrationService;
 use Carbon\CarbonInterface;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Carbon;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
-use Mockery;
 use Illuminate\Support\Str;
+use Mockery;
+use Tests\TestCase;
 
 class VaccineRegistrationServiceTest extends TestCase
 {
     use RefreshDatabase;
 
     protected $mockRepository;
+
     protected $service;
 
     protected function setUp(): void
@@ -48,7 +48,7 @@ class VaccineRegistrationServiceTest extends TestCase
         $vaccinationCenter = new VaccinationCenter([
             'id' => $centerId,
             'name' => 'Test Center',
-            'daily_capacity' => 100
+            'daily_capacity' => 100,
         ]);
 
         $this->mockRepository->shouldReceive('getVaccinationCenter')
@@ -58,13 +58,13 @@ class VaccineRegistrationServiceTest extends TestCase
         $this->mockRepository->shouldReceive('getVaccinationCountsByDateRange')
             ->with($centerId, Mockery::type(Carbon::class), Mockery::type(Carbon::class))
             ->andReturn(collect([
-                '2024-01-01' => (object)['scheduled_count' => 100], // Monday - Full
-                '2024-01-02' => (object)['scheduled_count' => 50],  // Tuesday - Available
-                '2024-01-03' => (object)['scheduled_count' => 100], // Wednesday - Full
-                '2024-01-04' => (object)['scheduled_count' => 100], // Thursday - Full
-                '2024-01-05' => (object)['scheduled_count' => 0],   // Friday - Skipped
-                '2024-01-06' => (object)['scheduled_count' => 0],   // Saturday - Skipped
-                '2024-01-07' => (object)['scheduled_count' => 0],   // Sunday - Available
+                '2024-01-01' => (object) ['scheduled_count' => 100], // Monday - Full
+                '2024-01-02' => (object) ['scheduled_count' => 50],  // Tuesday - Available
+                '2024-01-03' => (object) ['scheduled_count' => 100], // Wednesday - Full
+                '2024-01-04' => (object) ['scheduled_count' => 100], // Thursday - Full
+                '2024-01-05' => (object) ['scheduled_count' => 0],   // Friday - Skipped
+                '2024-01-06' => (object) ['scheduled_count' => 0],   // Saturday - Skipped
+                '2024-01-07' => (object) ['scheduled_count' => 0],   // Sunday - Available
             ]));
 
         // Act
@@ -80,13 +80,13 @@ class VaccineRegistrationServiceTest extends TestCase
     {
         // Arrange
         $centerId = Str::ulid()->toString();
-        $startDate = Carbon::create(2024, 1, 8, 9, 0, 0); // A Saturday at 8:00 AM
-        $expectedNextDate = Carbon::create(2024, 1, 8, 0, 0); // The following Monday
+        $startDate = Carbon::create(2024, 10, 5, 8, 0, 0); // A Saturday at 8:00 AM
+        $expectedNextDate = Carbon::create(2024, 10, 6, 0, 0); // The following Sunday
 
         $vaccinationCenter = new VaccinationCenter([
             'id' => $centerId,
             'name' => 'Test Center',
-            'daily_capacity' => 100
+            'daily_capacity' => 100,
         ]);
 
         $this->mockRepository->shouldReceive('getVaccinationCenter')
@@ -96,9 +96,9 @@ class VaccineRegistrationServiceTest extends TestCase
         $this->mockRepository->shouldReceive('getVaccinationCountsByDateRange')
             ->with($centerId, Mockery::type(Carbon::class), Mockery::type(Carbon::class))
             ->andReturn(collect([
-                '2024-01-08' => (object)['scheduled_count' => 50],  // Monday - Available
-                '2024-01-09' => (object)['scheduled_count' => 100], // Tuesday - Full
-                '2024-01-10' => (object)['scheduled_count' => 75],  // Wednesday - Available
+                '2024-01-08' => (object) ['scheduled_count' => 50],  // Monday - Available
+                '2024-01-09' => (object) ['scheduled_count' => 100], // Tuesday - Full
+                '2024-01-10' => (object) ['scheduled_count' => 75],  // Wednesday - Available
             ]));
 
         // Act
@@ -120,7 +120,7 @@ class VaccineRegistrationServiceTest extends TestCase
         $vaccinationCenter = new VaccinationCenter([
             'id' => $centerId,
             'name' => 'Test Center',
-            'daily_capacity' => 100
+            'daily_capacity' => 100,
         ]);
 
         $this->mockRepository->shouldReceive('getVaccinationCenter')
@@ -130,9 +130,9 @@ class VaccineRegistrationServiceTest extends TestCase
         $this->mockRepository->shouldReceive('getVaccinationCountsByDateRange')
             ->with($centerId, Mockery::type(Carbon::class), Mockery::type(Carbon::class))
             ->andReturn(collect([
-                '2024-01-01' => (object)['scheduled_count' => 100], // Monday - Full (but after 9 AM, so skipped)
-                '2024-01-02' => (object)['scheduled_count' => 50],  // Tuesday - Available
-                '2024-01-03' => (object)['scheduled_count' => 100], // Wednesday - Full
+                '2024-01-01' => (object) ['scheduled_count' => 100], // Monday - Full (but after 9 AM, so skipped)
+                '2024-01-02' => (object) ['scheduled_count' => 50],  // Tuesday - Available
+                '2024-01-03' => (object) ['scheduled_count' => 100], // Wednesday - Full
             ]));
 
         // Act
@@ -153,7 +153,7 @@ class VaccineRegistrationServiceTest extends TestCase
         $vaccinationCenter = new VaccinationCenter([
             'id' => $centerId,
             'name' => 'Test Center',
-            'daily_capacity' => 100
+            'daily_capacity' => 100,
         ]);
 
         $this->mockRepository->shouldReceive('getVaccinationCenter')
@@ -163,11 +163,11 @@ class VaccineRegistrationServiceTest extends TestCase
         // Mock a scenario where all dates are at full capacity
         $fullDates = collect();
         $currentDate = $startDate->copy();
-        $endDate = $currentDate->copy()->addDays((int)env('VACCINE_SCHEDULE_WINDOW_DAYS', 90));
+        $endDate = $currentDate->copy()->addDays((int) env('VACCINE_SCHEDULE_WINDOW_DAYS', 90));
 
         while ($currentDate <= $endDate) {
             if ($currentDate->dayOfWeek !== CarbonInterface::FRIDAY && $currentDate->dayOfWeek !== CarbonInterface::SATURDAY && $currentDate->dayOfWeek !== CarbonInterface::SUNDAY) {
-                $fullDates[$currentDate->toDateString()] = (object)['scheduled_count' => 100]; // Full capacity
+                $fullDates[$currentDate->toDateString()] = (object) ['scheduled_count' => 100]; // Full capacity
             }
             $currentDate->addDay();
         }
@@ -192,7 +192,7 @@ class VaccineRegistrationServiceTest extends TestCase
         $vaccinationCenter = new VaccinationCenter([
             'id' => $centerId,
             'name' => 'Test Center',
-            'daily_capacity' => 100
+            'daily_capacity' => 100,
         ]);
 
         $this->mockRepository->shouldReceive('getVaccinationCenter')
@@ -201,14 +201,14 @@ class VaccineRegistrationServiceTest extends TestCase
 
         // Mock a scenario where some dates are at full capacity, but not all
         $dates = collect([
-            '2024-01-01' => (object)['scheduled_count' => 100], // Monday - Full
-            '2024-01-02' => (object)['scheduled_count' => 100], // Tuesday - Full
-            '2024-01-03' => (object)['scheduled_count' => 100], // Wednesday - Full
-            '2024-01-04' => (object)['scheduled_count' => 50],  // Thursday - Available
-            '2024-01-05' => (object)['scheduled_count' => 0],   // Friday - Skipped
-            '2024-01-06' => (object)['scheduled_count' => 0],   // Saturday - Skipped
-            '2024-01-07' => (object)['scheduled_count' => 0],   // Sunday - Skipped
-            '2024-01-08' => (object)['scheduled_count' => 100], // Monday - Full
+            '2024-01-01' => (object) ['scheduled_count' => 100], // Monday - Full
+            '2024-01-02' => (object) ['scheduled_count' => 100], // Tuesday - Full
+            '2024-01-03' => (object) ['scheduled_count' => 100], // Wednesday - Full
+            '2024-01-04' => (object) ['scheduled_count' => 50],  // Thursday - Available
+            '2024-01-05' => (object) ['scheduled_count' => 0],   // Friday - Skipped
+            '2024-01-06' => (object) ['scheduled_count' => 0],   // Saturday - Skipped
+            '2024-01-07' => (object) ['scheduled_count' => 0],   // Sunday - Skipped
+            '2024-01-08' => (object) ['scheduled_count' => 100], // Monday - Full
         ]);
 
         $this->mockRepository->shouldReceive('getVaccinationCountsByDateRange')
@@ -235,7 +235,7 @@ class VaccineRegistrationServiceTest extends TestCase
         $vaccinationCenter = new VaccinationCenter([
             'id' => $centerId,
             'name' => 'Test Center',
-            'daily_capacity' => 100
+            'daily_capacity' => 100,
         ]);
 
         $this->mockRepository->shouldReceive('getVaccinationCenter')
@@ -246,9 +246,9 @@ class VaccineRegistrationServiceTest extends TestCase
         $dates = collect();
         $currentDate = $startDate->copy();
         while ($currentDate <= $endDate) {
-            if (!in_array($currentDate->dayOfWeek, [CarbonInterface::FRIDAY, CarbonInterface::SATURDAY])) {
+            if (! in_array($currentDate->dayOfWeek, [CarbonInterface::FRIDAY, CarbonInterface::SATURDAY])) {
                 $scheduledCount = ($currentDate->equalTo($endDate)) ? 0 : 100; // Only the last day is available
-                $dates[$currentDate->toDateString()] = (object)['scheduled_count' => $scheduledCount];
+                $dates[$currentDate->toDateString()] = (object) ['scheduled_count' => $scheduledCount];
             }
             $currentDate->addDay();
         }
@@ -282,7 +282,7 @@ class VaccineRegistrationServiceTest extends TestCase
         $vaccinationCenter = new VaccinationCenter([
             'id' => $centerId,
             'name' => 'Test Center',
-            'daily_capacity' => 100
+            'daily_capacity' => 100,
         ]);
 
         $this->mockRepository->shouldReceive('getVaccinationCenter')
@@ -323,7 +323,7 @@ class VaccineRegistrationServiceTest extends TestCase
         $this->mockRepository->shouldReceive('getVaccinationCountsByDateRange')
             ->once()
             ->with($center->id, Mockery::type(Carbon::class), Mockery::type(Carbon::class))
-            ->andReturn(collect([$nextAvailableDate->toDateString() => (object)['scheduled_count' => 0]]));
+            ->andReturn(collect([$nextAvailableDate->toDateString() => (object) ['scheduled_count' => 0]]));
 
         $this->mockRepository->shouldReceive('register')
             ->once()
@@ -356,5 +356,4 @@ class VaccineRegistrationServiceTest extends TestCase
         $this->assertArrayHasKey('vaccination', $content['data']);
         $this->assertEquals('Vaccine registration is Successful.', $content['message']);
     }
-
 }

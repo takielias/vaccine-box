@@ -9,10 +9,10 @@ use Illuminate\Console\OutputStyle;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Queue;
+use Mockery;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Tests\TestCase;
-use Mockery;
 
 class SendEmailReminderTest extends TestCase
 {
@@ -24,13 +24,13 @@ class SendEmailReminderTest extends TestCase
         $vaccinationDate = Carbon::now()->addDay();
         $vaccinationReminderRepository->shouldReceive('getVaccinationReminderEmails')
             ->andReturn(collect([
-                (object)['id' => 1, 'user' => (object)['email' => 'test@example.com'], 'vaccination_date' => $vaccinationDate],
+                (object) ['id' => 1, 'user' => (object) ['email' => 'test@example.com'], 'vaccination_date' => $vaccinationDate],
             ]));
 
         Queue::fake();
 
-        $output = new BufferedOutput();
-        $input = new ArgvInput();
+        $output = new BufferedOutput;
+        $input = new ArgvInput;
         $outputStyle = new OutputStyle($input, $output);
         $command = new SendEmails($vaccinationReminderRepository);
         $command->setOutput($outputStyle);

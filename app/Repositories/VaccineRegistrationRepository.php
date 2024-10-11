@@ -22,7 +22,7 @@ class VaccineRegistrationRepository implements VaccineRegistrationRepositoryInte
     /**
      * @throws RegistrationFailedException
      */
-    function register(array $data)
+    public function register(array $data)
     {
         try {
             return DB::transaction(function () use ($data) {
@@ -53,17 +53,17 @@ class VaccineRegistrationRepository implements VaccineRegistrationRepositoryInte
                 ];
             });
         } catch (\Exception $e) {
-            throw new RegistrationFailedException("Failed to register for vaccination: " . $e->getMessage());
+            throw new RegistrationFailedException('Failed to register for vaccination: '.$e->getMessage());
         }
     }
 
-    function getVaccinationCenters()
+    public function getVaccinationCenters()
     {
         // TODO: Implement getVaccinationCenters() method.
         return VaccinationCenter::all()->pluck('name', 'id')->prepend('Please Select Center', '');
     }
 
-    function getVaccinationCountsByDateRange($centerId, $startDate, $endDate)
+    public function getVaccinationCountsByDateRange($centerId, $startDate, $endDate)
     {
         return DB::table('vaccinations')
             ->select(DB::raw('vaccination_date, COUNT(*) as scheduled_count'))
@@ -75,5 +75,4 @@ class VaccineRegistrationRepository implements VaccineRegistrationRepositoryInte
                 return Carbon::parse($item->vaccination_date)->toDateString();
             });
     }
-
 }

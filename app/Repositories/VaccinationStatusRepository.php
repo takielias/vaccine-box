@@ -7,8 +7,7 @@ use App\Models\User;
 
 class VaccinationStatusRepository implements VaccinationStatusRepositoryInterface
 {
-
-    function getVaccinationStatus($nid)
+    public function getVaccinationStatus($nid)
     {
         return User::whereNid($nid)->first();
     }

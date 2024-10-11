@@ -58,5 +58,4 @@ class SendEmailReminderFeatureTest extends TestCase
         // Assert that the job was dispatched for the user with email
         Queue::assertPushed(SendEmailNotification::class, 1);
     }
-
 }

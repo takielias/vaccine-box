@@ -11,31 +11,32 @@ class VaccinationController extends Controller
 {
     public function __construct(
         private readonly VaccineRegistrationServiceInterface $vaccineRegistration,
-        private readonly VaccinationStatusServiceInterface   $vaccinationStatusService
-    )
-    {
-    }
+        private readonly VaccinationStatusServiceInterface $vaccinationStatusService
+    ) {}
 
-    function registration()
+    public function registration()
     {
         $vaccination_centers = $this->vaccineRegistration->getVaccinationCenters();
+
         return view('vaccination.registration', compact('vaccination_centers'));
     }
 
-    function proceedRegistration(VaccineRegistrationRequest $request)
+    public function proceedRegistration(VaccineRegistrationRequest $request)
     {
         $validated = $request->validated();
+
         return $this->vaccineRegistration->register($validated);
     }
 
-    function vaccinationStatus()
+    public function vaccinationStatus()
     {
         return view('vaccination.status');
     }
 
-    function searchVaccinationStatus(ValidVaccinationStatusSearchRequest $request)
+    public function searchVaccinationStatus(ValidVaccinationStatusSearchRequest $request)
     {
         $validated = $request->validated();
+
         return $this->vaccinationStatusService->getVaccinationStatus($validated);
     }
 }

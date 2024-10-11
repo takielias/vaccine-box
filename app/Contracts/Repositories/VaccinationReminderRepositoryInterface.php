@@ -4,8 +4,7 @@ namespace App\Contracts\Repositories;
 
 interface VaccinationReminderRepositoryInterface
 {
-    function getVaccinationReminderEmails($tomorrow);
+    public function getVaccinationReminderEmails($tomorrow);
 
-    function countPriorVaccinations($vaccination): int;
-
+    public function countPriorVaccinations($vaccination): int;
 }

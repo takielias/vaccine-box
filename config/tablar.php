@@ -16,7 +16,6 @@ return [
     'bottom_title' => 'Tablar',
     'current_version' => 'v4.8',
 
-
     /*
     |--------------------------------------------------------------------------
     | Admin Panel Logo
@@ -147,18 +146,18 @@ return [
         [
             'text' => 'Home',
             'icon' => 'ti ti-home',
-            'route' => 'welcome'
+            'route' => 'welcome',
         ],
         [
             'text' => 'Registration',
             'icon' => 'ti ti-user-plus',
-            'route' => 'vaccine-registration'
+            'route' => 'vaccine-registration',
         ],
 
         [
             'text' => 'Vaccination Status',
             'icon' => 'ti ti-status-change',
-            'route' => 'vaccination-status'
+            'route' => 'vaccination-status',
         ],
 
     ],

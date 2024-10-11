@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -59,6 +58,7 @@ class UserFactory extends Factory
         $prefixes = ['013', '014', '015', '016', '017', '018', '019'];
         $prefix = $this->faker->randomElement($prefixes);
         $number = $this->faker->numerify('########');
-        return $prefix . $number;
+
+        return $prefix.$number;
     }
 }

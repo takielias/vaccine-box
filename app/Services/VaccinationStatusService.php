@@ -10,17 +10,16 @@ use Takielias\Lab\Facades\Lab;
 
 class VaccinationStatusService implements VaccinationStatusServiceInterface
 {
-    public function __construct(public VaccinationStatusRepositoryInterface $vaccinationStatusRepository)
-    {
-    }
+    public function __construct(public VaccinationStatusRepositoryInterface $vaccinationStatusRepository) {}
 
     public function getVaccinationStatus($nid)
     {
         try {
             $patient = $this->vaccinationStatusRepository->getVaccinationStatus($nid);
 
-            if (!$patient || !$patient->vaccination) {
+            if (! $patient || ! $patient->vaccination) {
                 $registrationLink = route('vaccine-registration');
+
                 return $this->formatResponse(
                     VaccinationStatus::notRegistered,
                     "You are not registered for vaccination. Please <a class='alert-link' href='{$registrationLink}'><b>Register Here</b></a>",
@@ -31,10 +30,12 @@ class VaccinationStatusService implements VaccinationStatusServiceInterface
             $status = $this->determineVaccinationStatus($patient->vaccination);
             $scheduledDate = $patient->vaccination->vaccination_date->format('d-m-Y');
             $message = $this->getStatusMessage($status, $scheduledDate);
+
             return $this->formatResponse($status, $message, 200);
 
         } catch (\Exception $e) {
-            Log::error('Error fetching vaccination status: ' . $e->getMessage());
+            Log::error('Error fetching vaccination status: '.$e->getMessage());
+
             return $this->formatResponse(
                 null,
                 'An error occurred while fetching the vaccination status.',
@@ -48,6 +49,7 @@ class VaccinationStatusService implements VaccinationStatusServiceInterface
         if ($vaccination->vaccination_date->isPast()) {
             return VaccinationStatus::vaccinated;
         }
+
         return VaccinationStatus::from($vaccination->status);
     }
 
@@ -80,7 +82,7 @@ class VaccinationStatusService implements VaccinationStatusServiceInterface
         if ($httpStatus >= 400) {
             $lab->setDanger($message);
         }
+
         return $lab->toJsonResponse();
     }
-
 }

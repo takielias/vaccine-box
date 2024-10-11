@@ -25,16 +25,16 @@ class VaccinationStatusFeatureTest extends TestCase
             'vaccination_date' => Carbon::tomorrow(),
         ]);
 
-        $response = $this->postJson("/vaccination-status", [
-            'nid' => $user->nid
+        $response = $this->postJson('/vaccination-status', [
+            'nid' => $user->nid,
         ]);
 
         $response->assertStatus(200)
             ->assertJsonStructure([
                 'data' => [
                     'success',
-                    'status'
-                ]
+                    'status',
+                ],
             ])
             ->assertJson([
                 'data' => [
@@ -55,17 +55,16 @@ class VaccinationStatusFeatureTest extends TestCase
             'vaccination_date' => Carbon::yesterday(),
         ]);
 
-        $response = $this->postJson("/vaccination-status", [
-            'nid' => $user->nid
+        $response = $this->postJson('/vaccination-status', [
+            'nid' => $user->nid,
         ]);
-
 
         $response->assertStatus(200)
             ->assertJsonStructure([
                 'data' => [
                     'success',
-                    'status'
-                ]
+                    'status',
+                ],
             ])
             ->assertJson([
                 'data' => [
@@ -77,8 +76,8 @@ class VaccinationStatusFeatureTest extends TestCase
 
     public function testCheckStatusForNonRegisteredUser()
     {
-        $response = $this->postJson("/vaccination-status", [
-            'nid' => '1234567890'
+        $response = $this->postJson('/vaccination-status', [
+            'nid' => '1234567890',
         ]);
 
         $response->assertStatus(422)
@@ -87,8 +86,8 @@ class VaccinationStatusFeatureTest extends TestCase
                 'data' => [
                     'errors' => [
                         'nid' => ["The provided NID is not registered in our system. Please <a class='btn btn-sm btn-ghost-primary' href='http://localhost/vaccine-registration'>Register Here</a>"],
-                    ]
-                ]
+                    ],
+                ],
             ])
             ->assertJsonStructure([
                 'fade_out',
@@ -100,15 +99,15 @@ class VaccinationStatusFeatureTest extends TestCase
                 'message',
                 'data' => ['errors'],
                 'view',
-                'alert'
+                'alert',
             ]);
 
     }
 
     public function testCheckStatusWithInvalidNID()
     {
-        $response = $this->postJson("/vaccination-status", [
-            'nid' => '123@123'
+        $response = $this->postJson('/vaccination-status', [
+            'nid' => '123@123',
         ]);
 
         $response->assertStatus(422)
@@ -117,12 +116,12 @@ class VaccinationStatusFeatureTest extends TestCase
                 'data' => [
                     'errors' => [
                         'nid' => [
-                            "Patient NID must be numeric.",
-                            "Patient NID must be at least 10 characters.",
-                            "Patient NID is invalid."
+                            'Patient NID must be numeric.',
+                            'Patient NID must be at least 10 characters.',
+                            'Patient NID is invalid.',
                         ],
-                    ]
-                ]
+                    ],
+                ],
             ])
             ->assertJsonStructure([
                 'fade_out',
@@ -134,7 +133,7 @@ class VaccinationStatusFeatureTest extends TestCase
                 'message',
                 'data' => ['errors'],
                 'view',
-                'alert'
+                'alert',
             ]);
     }
 }

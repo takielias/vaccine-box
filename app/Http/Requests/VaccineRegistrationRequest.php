@@ -20,7 +20,6 @@ class VaccineRegistrationRequest extends FormRequest
         return true;
     }
 
-
     /**
      * Prepare the mobile number for validation.
      */
@@ -41,10 +40,10 @@ class VaccineRegistrationRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'min:3'],
             'email' => ['required', 'string', 'email', 'unique:users,email'],
-            'nid' => ['unique:users,nid', new ValidateNIDRule()],
-            'birth_date' => ['required', 'date', new MinimumAgeRule()],
-            'phone_number' => ['required', new ValidatePhoneNumberRule()],
-            'vaccination_center_id' => ['required', Rule::exists('vaccination_centers', 'id')]
+            'nid' => ['unique:users,nid', new ValidateNIDRule],
+            'birth_date' => ['required', 'date', new MinimumAgeRule],
+            'phone_number' => ['required', new ValidatePhoneNumberRule],
+            'vaccination_center_id' => ['required', Rule::exists('vaccination_centers', 'id')],
         ];
     }
 
@@ -59,7 +58,6 @@ class VaccineRegistrationRequest extends FormRequest
             'nid.unique' => 'Patient NID already exists.',
         ];
     }
-
 
     protected function failedValidation($validator)
     {

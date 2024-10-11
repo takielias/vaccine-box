@@ -10,14 +10,15 @@ use App\Services\VaccinationStatusService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Carbon;
-use Tests\TestCase;
 use Mockery;
+use Tests\TestCase;
 
 class VaccinationStatusServiceTest extends TestCase
 {
     use RefreshDatabase;
 
     protected $mockRepository;
+
     protected $service;
 
     protected function setUp(): void
@@ -60,7 +61,7 @@ class VaccinationStatusServiceTest extends TestCase
         $vaccination = Vaccination::factory()->create([
             'user_id' => $user->id,
             'vaccination_date' => Carbon::tomorrow(),
-            'status' => VaccinationStatus::scheduled->value
+            'status' => VaccinationStatus::scheduled->value,
         ]);
 
         $this->mockRepository->shouldReceive('getVaccinationStatus')
@@ -86,7 +87,7 @@ class VaccinationStatusServiceTest extends TestCase
         $vaccination = Vaccination::factory()->create([
             'user_id' => $user->id,
             'vaccination_date' => Carbon::yesterday(),
-            'status' => VaccinationStatus::vaccinated->value
+            'status' => VaccinationStatus::vaccinated->value,
         ]);
 
         $this->mockRepository->shouldReceive('getVaccinationStatus')

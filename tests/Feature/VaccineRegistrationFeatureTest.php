@@ -2,15 +2,15 @@
 
 namespace Tests\Feature;
 
+use App\Enums\VaccinationStatus;
 use App\Models\User;
 use App\Models\Vaccination;
 use App\Models\VaccinationCenter;
-use App\Enums\VaccinationStatus;
 use Carbon\CarbonInterface;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
 use Illuminate\Support\Carbon;
+use Tests\TestCase;
 
 class VaccineRegistrationFeatureTest extends TestCase
 {
@@ -40,15 +40,15 @@ class VaccineRegistrationFeatureTest extends TestCase
                 'data' => [
                     'success',
                     'user',
-                    'vaccination'
+                    'vaccination',
                 ],
-                'message'
+                'message',
             ])
             ->assertJson([
                 'data' => [
                     'success' => true,
                 ],
-                'message' => 'Vaccine registration is Successful.'
+                'message' => 'Vaccine registration is Successful.',
             ]);
 
         $this->assertDatabaseHas('users', [
@@ -86,11 +86,11 @@ class VaccineRegistrationFeatureTest extends TestCase
                         'nid' => ['Patient NID must be at least 10 characters.'],
                         'birth_date' => [
                             'The birth date field must be a valid date.',
-                            'The birth_date is not a valid date.'
+                            'The birth_date is not a valid date.',
                         ],
-                        'phone_number' => ['The phone number must be a valid Bangladeshi phone number.']
-                    ]
-                ]
+                        'phone_number' => ['The phone number must be a valid Bangladeshi phone number.'],
+                    ],
+                ],
             ])
             ->assertJsonStructure([
                 'fade_out',
@@ -102,7 +102,7 @@ class VaccineRegistrationFeatureTest extends TestCase
                 'message',
                 'data' => ['errors'],
                 'view',
-                'alert'
+                'alert',
             ]);
     }
 
@@ -125,9 +125,9 @@ class VaccineRegistrationFeatureTest extends TestCase
                 'message' => 'Validation Error.',
                 'data' => [
                     'errors' => [
-                        'nid' => ['Patient NID already exists.']
-                    ]
-                ]
+                        'nid' => ['Patient NID already exists.'],
+                    ],
+                ],
             ])
             ->assertJsonStructure([
                 'fade_out',
@@ -139,7 +139,7 @@ class VaccineRegistrationFeatureTest extends TestCase
                 'message',
                 'data' => ['errors'],
                 'view',
-                'alert'
+                'alert',
             ]);
 
         // Ensure no new user was created
@@ -154,7 +154,7 @@ class VaccineRegistrationFeatureTest extends TestCase
         $startDate = Carbon::now();
         $endDate = $startDate->copy()->addDays(90);
         while ($startDate <= $endDate) {
-            if (!in_array($startDate->dayOfWeek, [CarbonInterface::FRIDAY, CarbonInterface::SATURDAY])) {
+            if (! in_array($startDate->dayOfWeek, [CarbonInterface::FRIDAY, CarbonInterface::SATURDAY])) {
                 User::factory()->create(['nid' => $this->faker->unique()->numerify('##########')]);
                 Vaccination::factory()->create([
                     'vaccination_center_id' => $center->id,
@@ -179,7 +179,7 @@ class VaccineRegistrationFeatureTest extends TestCase
                 'data' => [
                     'success' => false,
                 ],
-                'message' => 'No available vaccination dates for the selected center. Please try again later.'
+                'message' => 'No available vaccination dates for the selected center. Please try again later.',
             ]);
     }
 
@@ -204,15 +204,15 @@ class VaccineRegistrationFeatureTest extends TestCase
                 'data' => [
                     'success' => true,
                 ],
-                'message' => 'Vaccine registration is Successful.'
+                'message' => 'Vaccine registration is Successful.',
             ])
             ->assertJsonStructure([
                 'data' => [
                     'success',
                     'user',
-                    'vaccination'
+                    'vaccination',
                 ],
-                'message'
+                'message',
             ]);
 
         // Parse the vaccination date from the response
@@ -240,7 +240,7 @@ class VaccineRegistrationFeatureTest extends TestCase
             ->where('status', VaccinationStatus::scheduled->value)
             ->first();
 
-        $this->assertNotNull($vaccinationRecord, "Vaccination record not found in the database");
+        $this->assertNotNull($vaccinationRecord, 'Vaccination record not found in the database');
 
         // Compare the dates, ignoring time
         $this->assertTrue(
@@ -249,7 +249,7 @@ class VaccineRegistrationFeatureTest extends TestCase
         );
 
         // Output the scheduled date for debugging
-        echo "Scheduled vaccination date: " . $scheduledDate->toDateString() . " ({$dayName})\n";
-        echo "Database vaccination date: " . $vaccinationRecord->vaccination_date->toDateString() . "\n";
+        echo 'Scheduled vaccination date: '.$scheduledDate->toDateString()." ({$dayName})\n";
+        echo 'Database vaccination date: '.$vaccinationRecord->vaccination_date->toDateString()."\n";
     }
 }

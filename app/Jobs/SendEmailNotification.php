@@ -38,6 +38,7 @@ class SendEmailNotification implements ShouldQueue
         $startTime = Carbon::create(2024, 1, 1, 9, 0, 0); // 9:00 AM
         $vaccinationsBeforeThis = $repository->countPriorVaccinations($this->vaccination);
         $slotTime = $startTime->addMinutes($vaccinationsBeforeThis * 5);
+
         return $slotTime->format('g:i A');
     }
 }

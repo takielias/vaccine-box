@@ -15,13 +15,12 @@ class VaccinationCenterFactory extends Factory
      *
      * @return array<string, mixed>
      */
-
     protected $model = VaccinationCenter::class;
 
     public function definition(): array
     {
         return [
-            'name' => $this->faker->company . ' Vaccination Center',
+            'name' => $this->faker->company.' Vaccination Center',
             'daily_capacity' => $this->faker->numberBetween(5, 100),
         ];
     }

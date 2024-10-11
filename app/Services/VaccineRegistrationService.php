@@ -12,10 +12,7 @@ use Takielias\Lab\Facades\Lab;
 
 class VaccineRegistrationService implements VaccineRegistrationServiceInterface
 {
-
-    public function __construct(public VaccineRegistrationRepositoryInterface $vaccineRegistrationRepository)
-    {
-    }
+    public function __construct(public VaccineRegistrationRepositoryInterface $vaccineRegistrationRepository) {}
 
     /**
      * @throws NoAvailableDatesException
@@ -25,10 +22,10 @@ class VaccineRegistrationService implements VaccineRegistrationServiceInterface
         $centerId = $data['vaccination_center_id'];
         $nextAvailableDate = $this->getNextAvailableVaccinationDate($centerId);
 
-        if (!$nextAvailableDate) {
+        if (! $nextAvailableDate) {
             return Lab::setData(['success' => false])
                 ->enableScrollToTop()
-                ->setDanger("No available vaccination dates for the selected center. Please try again later.")
+                ->setDanger('No available vaccination dates for the selected center. Please try again later.')
                 ->setStatus(400)
                 ->toJsonResponse();
         }
@@ -37,10 +34,11 @@ class VaccineRegistrationService implements VaccineRegistrationServiceInterface
 
         try {
             $result = $this->vaccineRegistrationRepository->register($data);
+
             return Lab::setData([
                 'success' => true,
                 'user' => $result['user'],
-                'vaccination' => $result['vaccination']
+                'vaccination' => $result['vaccination'],
             ])
                 ->enableScrollToTop()
                 ->setSuccess('Vaccine registration is Successful.')
@@ -58,7 +56,7 @@ class VaccineRegistrationService implements VaccineRegistrationServiceInterface
         }
     }
 
-    function getNextAvailableVaccinationDate($centerId, $startDate = null)
+    public function getNextAvailableVaccinationDate($centerId, $startDate = null)
     {
 
         $now = Carbon::now();
@@ -73,7 +71,7 @@ class VaccineRegistrationService implements VaccineRegistrationServiceInterface
             $startDate->addDay();
         }
 
-        $endDate = $startDate->copy()->addDays((int)env('VACCINE_SCHEDULE_WINDOW_DAYS', 90)); // Look up to 90 days in the future
+        $endDate = $startDate->copy()->addDays((int) env('VACCINE_SCHEDULE_WINDOW_DAYS', 90)); // Look up to 90 days in the future
 
         $center = $this->vaccineRegistrationRepository->getVaccinationCenter($centerId);
         $availableDates = $this->vaccineRegistrationRepository->getVaccinationCountsByDateRange($centerId, $startDate, $endDate);
@@ -109,5 +107,4 @@ class VaccineRegistrationService implements VaccineRegistrationServiceInterface
     {
         return $this->vaccineRegistrationRepository->getVaccinationCenters();
     }
-
 }

@@ -4,10 +4,9 @@ namespace App\Contracts\Repositories;
 
 interface VaccineRegistrationRepositoryInterface
 {
-    function register(array $data);
+    public function register(array $data);
 
-    function getVaccinationCenters();
+    public function getVaccinationCenters();
 
-    function getVaccinationCountsByDateRange($centerId, $startDate, $endDate);
-
+    public function getVaccinationCountsByDateRange($centerId, $startDate, $endDate);
 }

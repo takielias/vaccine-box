@@ -4,5 +4,5 @@ namespace App\Contracts\Repositories;
 
 interface VaccinationStatusRepositoryInterface
 {
-    function getVaccinationStatus($nid);
+    public function getVaccinationStatus($nid);
 }

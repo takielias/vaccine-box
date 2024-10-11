@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 class SendEmails extends Command
 {
     protected $signature = 'app:send-emails';
+
     protected $description = 'Send email notifications to patients with vaccinations scheduled for tomorrow';
 
     public function __construct(protected readonly VaccinationReminderRepositoryInterface $vaccinationReminderRepository)

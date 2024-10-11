@@ -10,7 +10,7 @@ class ValidateNIDRule implements ValidationRule
     /**
      * Run the validation rule.
      *
-     * @param \Closure(string, ?string=): \Illuminate\Translation\PotentiallyTranslatedString $fail
+     * @param  \Closure(string, ?string=): \Illuminate\Translation\PotentiallyTranslatedString  $fail
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
@@ -18,7 +18,7 @@ class ValidateNIDRule implements ValidationRule
             $fail('Patient NID is required.');
         }
 
-        if (!is_numeric($value)) {
+        if (! is_numeric($value)) {
             $fail('Patient NID must be numeric.');
         }
 
@@ -26,7 +26,7 @@ class ValidateNIDRule implements ValidationRule
             $fail('Patient NID must be at least 10 characters.');
         }
 
-        if (!preg_match('/^[a-zA-Z0-9]+$/', $value)) {
+        if (! preg_match('/^[a-zA-Z0-9]+$/', $value)) {
             $fail('Patient NID is invalid.');
         }
     }
