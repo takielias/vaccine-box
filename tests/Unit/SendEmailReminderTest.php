@@ -7,7 +7,6 @@ use App\Contracts\Repositories\VaccinationReminderRepositoryInterface;
 use App\Jobs\SendEmailNotification;
 use Illuminate\Console\OutputStyle;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Queue;
 use Symfony\Component\Console\Input\ArgvInput;
@@ -17,7 +16,7 @@ use Mockery;
 
 class SendEmailReminderTest extends TestCase
 {
-    use WithFaker, RefreshDatabase;
+    use RefreshDatabase;
 
     public function testHandleSendsEmailNotifications()
     {

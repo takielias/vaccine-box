@@ -9,14 +9,13 @@ use App\Models\User;
 use App\Models\Vaccination;
 use App\Models\VaccinationCenter;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
 
 class SendEmailReminderFeatureTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
+    use RefreshDatabase;
 
     public function testSendEmailReminders()
     {
