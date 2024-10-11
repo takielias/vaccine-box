@@ -76,20 +76,4 @@ class VaccineRegistrationRepository implements VaccineRegistrationRepositoryInte
             });
     }
 
-    function getVaccinationReminderEmails($tomorrow)
-    {
-        return Vaccination::with('user')
-            ->whereDate('vaccination_date', $tomorrow->toDateString())
-            ->where('status', 'scheduled')
-            ->get();
-    }
-
-    public function countPriorVaccinations($vaccination): int
-    {
-        return Vaccination::where('vaccination_center_id', $vaccination->vaccination_center_id)
-            ->whereDate('vaccination_date', $vaccination->vaccination_date)
-            ->where('id', '<', $vaccination->id)
-            ->count();
-    }
-
 }

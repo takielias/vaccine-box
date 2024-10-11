@@ -14,7 +14,6 @@ class ValidateNIDRule implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        //
         if (empty($value)) {
             $fail('Patient NID is required.');
         }

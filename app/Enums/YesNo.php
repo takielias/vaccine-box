@@ -6,8 +6,6 @@ use Illuminate\Support\Collection;
 
 enum YesNo: string
 {
-    //
-
     case yes = 'yes';
     case no = 'no';
 

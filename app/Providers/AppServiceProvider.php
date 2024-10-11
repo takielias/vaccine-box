@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App\Contracts\Repositories\VaccinationReminderRepositoryInterface;
 use App\Contracts\Repositories\VaccinationStatusRepositoryInterface;
 use App\Contracts\Repositories\VaccineRegistrationRepositoryInterface;
 use App\Contracts\Services\VaccinationStatusServiceInterface;
 use App\Contracts\Services\VaccineRegistrationServiceInterface;
+use App\Repositories\VaccinationReminderRepository;
 use App\Repositories\VaccinationStatusRepository;
 use App\Repositories\VaccineRegistrationRepository;
 use App\Services\VaccinationStatusService;
@@ -19,12 +21,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-
         $this->app->bind(VaccineRegistrationServiceInterface::class, VaccineRegistrationService::class);
         $this->app->bind(VaccinationStatusServiceInterface::class, VaccinationStatusService::class);
         $this->app->bind(VaccineRegistrationRepositoryInterface::class, VaccineRegistrationRepository::class);
         $this->app->bind(VaccinationStatusRepositoryInterface::class, VaccinationStatusRepository::class);
-
+        $this->app->bind(VaccinationReminderRepositoryInterface::class, VaccinationReminderRepository::class);
     }
 
     /**

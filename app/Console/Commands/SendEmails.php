@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Contracts\Repositories\VaccineRegistrationRepositoryInterface;
+use App\Contracts\Repositories\VaccinationReminderRepositoryInterface;
 use App\Jobs\SendEmailNotification;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -12,7 +12,7 @@ class SendEmails extends Command
     protected $signature = 'app:send-emails';
     protected $description = 'Send email notifications to patients with vaccinations scheduled for tomorrow';
 
-    public function __construct(protected readonly VaccineRegistrationRepositoryInterface $vaccinationRegistrationRepository)
+    public function __construct(protected readonly VaccinationReminderRepositoryInterface $vaccinationReminderRepository)
     {
         parent::__construct();
     }
@@ -21,7 +21,7 @@ class SendEmails extends Command
     {
         $tomorrow = now()->addDay();
 
-        $vaccinations = $this->vaccinationRegistrationRepository->getVaccinationReminderEmails($tomorrow);
+        $vaccinations = $this->vaccinationReminderRepository->getVaccinationReminderEmails($tomorrow);
 
         $count = 0;
 

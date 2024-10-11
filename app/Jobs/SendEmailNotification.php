@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Contracts\Repositories\VaccineRegistrationRepositoryInterface;
+use App\Contracts\Repositories\VaccinationReminderRepositoryInterface;
 use App\Mail\VaccinationReminder;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -23,7 +23,7 @@ class SendEmailNotification implements ShouldQueue
         $this->vaccination = $vaccination;
     }
 
-    public function handle(VaccineRegistrationRepositoryInterface $vaccineRegistrationRepository): void
+    public function handle(VaccinationReminderRepositoryInterface $vaccineRegistrationRepository): void
     {
         $user = $this->vaccination->user;
 
@@ -33,7 +33,7 @@ class SendEmailNotification implements ShouldQueue
         }
     }
 
-    protected function calculateTimeSlot(VaccineRegistrationRepositoryInterface $repository): string
+    protected function calculateTimeSlot(VaccinationReminderRepositoryInterface $repository): string
     {
         $startTime = Carbon::create(2024, 1, 1, 9, 0, 0); // 9:00 AM
         $vaccinationsBeforeThis = $repository->countPriorVaccinations($this->vaccination);

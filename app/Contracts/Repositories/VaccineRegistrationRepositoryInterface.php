@@ -10,8 +10,4 @@ interface VaccineRegistrationRepositoryInterface
 
     function getVaccinationCountsByDateRange($centerId, $startDate, $endDate);
 
-    function getVaccinationReminderEmails($tomorrow);
-
-    function countPriorVaccinations($vaccination): int;
-
 }
