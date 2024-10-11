@@ -118,24 +118,26 @@ ddev artisan schedule:work
 
 ## Email Schedule
 
-Before start checking Email Schedule, make sure you have a valid `RESEND_API_KEY`. You may generate free api key from https://resend.com.
+Before start checking Email Schedule, make sure you have a valid `RESEND_API_KEY`. You may generate free api key
+from https://resend.com.
 Put the key in you `.env`
 
 ```ssh
 RESEND_API_KEY=Your Resend Api Key
 ```
+
 Make sure you have started `artisan schedule:work`
 
 Execute the following command to check the Email Sending Feature
 
 ```ssh
-php artisan app:send-emails
+php artisan app:send-notification
 ```
 
 Or with DDEV:
 
 ```
-ddev artisan app:send-emails
+ddev artisan app:send-notification
 ```
 
 ## Running Tests
@@ -153,6 +155,35 @@ Or with DDEV:
 ```
 ddev artisan test
 ```
+
+## SMS Notifications (Additional requirement)
+
+If a requirement to send SMS notifications in addition to email notifications for vaccine schedule dates is added in the
+future, the following changes would need to be made:
+
+1. Create a new job `App\Jobs\SendSmsNotification`:
+   ```php
+   php artisan make:job SendSmsNotification
+   ```
+   This job will be responsible for sending individual SMS notifications. Make the api request to send sms here.
+
+2. Update the existing command `App\Console\Commands\SendNotification`:
+   `Add the Following Code after the line number 31`
+   ```php
+   SendSmsNotification::dispatch($vaccination);
+   ```
+   This command will fetch scheduled vaccinations and dispatch `SendSmsNotification` jobs.
+
+3. Add a new configuration for SMS gateway credentials in the `.env` file and `config/services.php`.
+
+4. Create new views for SMS templates if Required.
+
+5. Add new unit and feature tests for SMS functionality.
+
+6. Ensure the queue is configured to handle the additional SMS jobs.
+
+These changes will implement a separate SMS notification system that can run alongside the existing email notification
+system. This approach makes it easy to manage each notification type independently.
 
 ## License
 

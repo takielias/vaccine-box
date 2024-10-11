@@ -8,7 +8,7 @@ use App\Models\Vaccination;
 
 class VaccinationReminderRepository implements VaccinationReminderRepositoryInterface
 {
-    public function getVaccinationReminderEmails($tomorrow)
+    public function getVaccinationReminderData($tomorrow)
     {
         return Vaccination::with('user')
             ->whereDate('vaccination_date', $tomorrow->toDateString())

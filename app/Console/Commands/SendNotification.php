@@ -7,11 +7,11 @@ use App\Jobs\SendEmailNotification;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-class SendEmails extends Command
+class SendNotification extends Command
 {
-    protected $signature = 'app:send-emails';
+    protected $signature = 'app:send-notification';
 
-    protected $description = 'Send email notifications to patients with vaccinations scheduled for tomorrow';
+    protected $description = 'Send notifications to patients with vaccinations scheduled for tomorrow';
 
     public function __construct(protected readonly VaccinationReminderRepositoryInterface $vaccinationReminderRepository)
     {
@@ -22,7 +22,7 @@ class SendEmails extends Command
     {
         $tomorrow = now()->addDay();
 
-        $vaccinations = $this->vaccinationReminderRepository->getVaccinationReminderEmails($tomorrow);
+        $vaccinations = $this->vaccinationReminderRepository->getVaccinationReminderData($tomorrow);
 
         $count = 0;
 

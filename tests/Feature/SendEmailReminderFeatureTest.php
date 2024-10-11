@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Console\Commands\SendEmails;
+use App\Console\Commands\SendNotification;
 use App\Enums\VaccinationStatus;
 use App\Jobs\SendEmailNotification;
 use App\Models\User;
@@ -31,7 +31,7 @@ class SendEmailReminderFeatureTest extends TestCase
 
         Queue::fake();
 
-        $this->artisan(SendEmails::class, ['--no-interaction' => true])
+        $this->artisan(SendNotification::class, ['--no-interaction' => true])
             ->assertExitCode(0); // Ensure the command runs successfully
 
         // Assert that the job was dispatched for the user with email
@@ -52,7 +52,7 @@ class SendEmailReminderFeatureTest extends TestCase
 
         Queue::fake();
 
-        $this->artisan(SendEmails::class, ['--no-interaction' => true])
+        $this->artisan(SendNotification::class, ['--no-interaction' => true])
             ->assertExitCode(0); // Ensure the command runs successfully
 
         // Assert that the job was dispatched for the user with email

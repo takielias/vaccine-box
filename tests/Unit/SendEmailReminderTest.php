@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\Console\Commands\SendEmails;
+use App\Console\Commands\SendNotification;
 use App\Contracts\Repositories\VaccinationReminderRepositoryInterface;
 use App\Jobs\SendEmailNotification;
 use Illuminate\Console\OutputStyle;
@@ -22,7 +22,7 @@ class SendEmailReminderTest extends TestCase
     {
         $vaccinationReminderRepository = Mockery::mock(VaccinationReminderRepositoryInterface::class);
         $vaccinationDate = Carbon::now()->addDay();
-        $vaccinationReminderRepository->shouldReceive('getVaccinationReminderEmails')
+        $vaccinationReminderRepository->shouldReceive('getVaccinationReminderData')
             ->andReturn(collect([
                 (object) ['id' => 1, 'user' => (object) ['email' => 'test@example.com'], 'vaccination_date' => $vaccinationDate],
             ]));
@@ -32,7 +32,7 @@ class SendEmailReminderTest extends TestCase
         $output = new BufferedOutput;
         $input = new ArgvInput;
         $outputStyle = new OutputStyle($input, $output);
-        $command = new SendEmails($vaccinationReminderRepository);
+        $command = new SendNotification($vaccinationReminderRepository);
         $command->setOutput($outputStyle);
         $command->handle();
 

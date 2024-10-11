@@ -12,7 +12,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withSchedule(function (Schedule $schedule) {
-        $schedule->command('app:send-emails')->dailyAt('21:00');
+        $schedule->command('app:send-notification')->dailyAt('21:00');
     })
     ->withMiddleware(function (Middleware $middleware) {
         //
