@@ -15,7 +15,7 @@ and check their vaccination status.
 - Laravel ^11.0
 - PHP 8.3+
 - Composer
-- MySQL 8.0+
+- Mariadb 10.11
 - Node.js 18+ and npm
 
 ## Installation
