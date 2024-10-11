@@ -20,6 +20,17 @@ class VaccineRegistrationRequest extends FormRequest
         return true;
     }
 
+
+    /**
+     * Prepare the mobile number for validation.
+     */
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'phone_number' => formatPhoneNumber($this->phone_number),
+        ]);
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
