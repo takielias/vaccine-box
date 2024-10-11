@@ -2,7 +2,6 @@
 
 namespace App\Contracts\Services;
 
-use Illuminate\Support\Carbon;
 
 interface VaccineRegistrationServiceInterface
 {
@@ -10,6 +9,6 @@ interface VaccineRegistrationServiceInterface
 
     public function getVaccinationCenters();
 
-    public function getNextAvailableVaccinationDate($centerId, ?Carbon $startDate = null): ?Carbon;
+    public function getNextAvailableVaccinationDate($centerId, $startDate = null);
 
 }

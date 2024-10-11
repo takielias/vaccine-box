@@ -4,15 +4,13 @@ namespace App\Services;
 
 use App\Contracts\Repositories\VaccineRegistrationRepositoryInterface;
 use App\Contracts\Services\VaccineRegistrationServiceInterface;
-use App\Enums\VaccinationStatus;
 use App\Exceptions\NoAvailableDatesException;
 use App\Exceptions\RegistrationFailedException;
 use Carbon\CarbonInterface;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Log;
 use Takielias\Lab\Facades\Lab;
 
-readonly class VaccineRegistrationService implements VaccineRegistrationServiceInterface
+class VaccineRegistrationService implements VaccineRegistrationServiceInterface
 {
 
     public function __construct(public VaccineRegistrationRepositoryInterface $vaccineRegistrationRepository)
@@ -60,7 +58,7 @@ readonly class VaccineRegistrationService implements VaccineRegistrationServiceI
         }
     }
 
-    function getNextAvailableVaccinationDate($centerId, ?Carbon $startDate = null): ?Carbon
+    function getNextAvailableVaccinationDate($centerId, $startDate = null)
     {
 
         $now = Carbon::now();
