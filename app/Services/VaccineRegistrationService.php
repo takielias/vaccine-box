@@ -44,8 +44,8 @@ class VaccineRegistrationService implements VaccineRegistrationServiceInterface
                 ->setSuccess('Vaccine registration is Successful.')
                 ->setStatus(201)
                 ->setRedirect(route('welcome'))
-                ->setFadeOutTime(5000)
-                ->setRedirectDelay(5500)
+                ->setFadeOutTime(1500)
+                ->setRedirectDelay(2000)
                 ->toJsonResponse();
         } catch (RegistrationFailedException $e) {
             return Lab::setData(['success' => false])
