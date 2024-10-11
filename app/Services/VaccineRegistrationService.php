@@ -28,7 +28,11 @@ readonly class VaccineRegistrationService implements VaccineRegistrationServiceI
         $nextAvailableDate = $this->getNextAvailableVaccinationDate($centerId);
 
         if (!$nextAvailableDate) {
-            throw new NoAvailableDatesException("No available vaccination dates for the selected center. Please try again later.");
+            return Lab::setData(['success' => false])
+                ->enableScrollToTop()
+                ->setDanger("No available vaccination dates for the selected center. Please try again later.")
+                ->setStatus(400)
+                ->toJsonResponse();
         }
 
         $data['next_available_date'] = $nextAvailableDate;
@@ -47,12 +51,6 @@ readonly class VaccineRegistrationService implements VaccineRegistrationServiceI
                 ->setFadeOutTime(5000)
                 ->setRedirectDelay(5500)
                 ->toJsonResponse();
-        } catch (NoAvailableDatesException $e) {
-            return Lab::setData(['success' => false])
-                ->enableScrollToTop()
-                ->setDanger($e->getMessage())
-                ->setStatus(400)
-                ->toJsonResponse();
         } catch (RegistrationFailedException $e) {
             return Lab::setData(['success' => false])
                 ->enableScrollToTop()
@@ -61,7 +59,6 @@ readonly class VaccineRegistrationService implements VaccineRegistrationServiceI
                 ->toJsonResponse();
         }
     }
-
 
     function getNextAvailableVaccinationDate($centerId, ?Carbon $startDate = null): ?Carbon
     {
@@ -97,7 +94,7 @@ readonly class VaccineRegistrationService implements VaccineRegistrationServiceI
         $currentDate = $startDate->copy();
         while ($currentDate <= $endDate) {
             // Skip Friday (5) and Saturday (6)
-            if ($currentDate->dayOfWeek !== 5 && $currentDate->dayOfWeek !== 6) {
+            if ($currentDate->dayOfWeek !== CarbonInterface::FRIDAY && $currentDate->dayOfWeek !== CarbonInterface::SATURDAY) {
                 $scheduledCount = $availableDates[$currentDate->toDateString()]->scheduled_count ?? 0;
 
                 if ($scheduledCount < $center->daily_capacity) {
@@ -112,80 +109,7 @@ readonly class VaccineRegistrationService implements VaccineRegistrationServiceI
 
     public function getVaccinationCenters()
     {
-        // TODO: Implement getVaccinationCenters() method.
         return $this->vaccineRegistrationRepository->getVaccinationCenters();
-    }
-
-    public function getVaccinationStatus($nid)
-    {
-        // TODO: Implement getStatus() method.
-        try {
-            $patient = $this->vaccineRegistrationRepository->getVaccinationStatus($nid);
-
-            if (!$patient || !$patient->vaccination) {
-                $registrationLink = route('vaccine-registration');
-                return $this->formatResponse(
-                    VaccinationStatus::notRegistered,
-                    "You are not registered for vaccination. Please <a class='alert-link' href='{$registrationLink}'><b>Register Here</b></a>",
-                    400
-                );
-            }
-
-            $status = $this->determineVaccinationStatus($patient->vaccination);
-            $scheduledDate = $patient->vaccination->vaccination_date->format('d-m-Y');
-
-            $message = $this->getStatusMessage($status, $scheduledDate);
-
-            return $this->formatResponse($status, $message, 200);
-
-        } catch (\Exception $e) {
-            Log::error('Error fetching vaccination status: ' . $e->getMessage());
-            return $this->formatResponse(
-                null,
-                'An error occurred while fetching the vaccination status.',
-                500
-            );
-        }
-    }
-
-    private function determineVaccinationStatus($vaccination): VaccinationStatus
-    {
-        if ($vaccination->vaccination_date->isPast()) {
-            return VaccinationStatus::vaccinated;
-        }
-        return VaccinationStatus::from($vaccination->status);
-    }
-
-    private function getStatusMessage(VaccinationStatus $status, string $date): string
-    {
-        return match ($status) {
-            VaccinationStatus::notScheduled => 'Your vaccination is not yet scheduled.',
-            VaccinationStatus::scheduled => "Your vaccination is scheduled for <b>{$date}</b>.",
-            VaccinationStatus::vaccinated => "Your vaccination was completed on <b>{$date}</b>.",
-            default => 'Unknown vaccination status.',
-        };
-    }
-
-    private function formatResponse(?VaccinationStatus $status, string $message, int $httpStatus)
-    {
-        $lab = Lab::setData([
-            'success' => $httpStatus < 400,
-            'status' => $status?->value,
-        ])
-            ->enableScrollToTop()
-            ->setStatus($httpStatus)
-            ->setFadeOutTime(5000)
-            ->setRedirectDelay(5500);
-        match ($status) {
-            VaccinationStatus::notScheduled,
-            VaccinationStatus::scheduled => $lab->setInfo($message)->setIconClass('ti ti-mood-happy'),
-            VaccinationStatus::vaccinated => $lab->setSuccess($message),
-            default => $lab->setWarning($message),
-        };
-        if ($httpStatus >= 400) {
-            $lab->setDanger($message);
-        }
-        return $lab->toJsonResponse();
     }
 
 }

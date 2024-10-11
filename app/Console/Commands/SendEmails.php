@@ -23,8 +23,6 @@ class SendEmails extends Command
 
         $vaccinations = $this->vaccinationRegistrationRepository->getVaccinationReminderEmails($tomorrow);
 
-        Log::info($vaccinations);
-
         $count = 0;
 
         foreach ($vaccinations as $vaccination) {

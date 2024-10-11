@@ -7,7 +7,6 @@ use App\Exceptions\RegistrationFailedException;
 use App\Models\User;
 use App\Models\Vaccination;
 use App\Models\VaccinationCenter;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -15,7 +14,6 @@ use Illuminate\Support\Str;
 
 class VaccineRegistrationRepository implements VaccineRegistrationRepositoryInterface
 {
-
     public function getVaccinationCenter($centerId)
     {
         return VaccinationCenter::find($centerId);
@@ -65,7 +63,7 @@ class VaccineRegistrationRepository implements VaccineRegistrationRepositoryInte
         return VaccinationCenter::all()->pluck('name', 'id')->prepend('Please Select Center', '');
     }
 
-    function getVaccinationCountsByDateRange($centerId, Carbon $startDate, Carbon $endDate): Collection
+    function getVaccinationCountsByDateRange($centerId, $startDate, $endDate)
     {
         return DB::table('vaccinations')
             ->select(DB::raw('vaccination_date, COUNT(*) as scheduled_count'))
@@ -78,23 +76,20 @@ class VaccineRegistrationRepository implements VaccineRegistrationRepositoryInte
             });
     }
 
-    function getVaccinationReminderEmails(Carbon $tomorrow): \Illuminate\Database\Eloquent\Collection
+    function getVaccinationReminderEmails($tomorrow)
     {
         return Vaccination::with('user')
             ->whereDate('vaccination_date', $tomorrow->toDateString())
             ->where('status', 'scheduled')
             ->get();
     }
-    public function countPriorVaccinations(Vaccination $vaccination): int
+
+    public function countPriorVaccinations($vaccination): int
     {
         return Vaccination::where('vaccination_center_id', $vaccination->vaccination_center_id)
             ->whereDate('vaccination_date', $vaccination->vaccination_date)
             ->where('id', '<', $vaccination->id)
             ->count();
     }
-    function getVaccinationStatus($nid)
-    {
-        // TODO: Implement getVaccinationStatus() method.
-        return User::whereNid($nid)->first();
-    }
+
 }

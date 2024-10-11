@@ -28,7 +28,7 @@ class VaccineRegistrationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string'],
+            'name' => ['required', 'string', 'min:3'],
             'email' => ['required', 'string', 'email', 'unique:users,email'],
             'nid' => ['unique:users,nid', new ValidateNIDRule()],
             'birth_date' => ['required', 'date', new MinimumAgeRule()],

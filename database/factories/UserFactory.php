@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -11,34 +12,53 @@ use Illuminate\Support\Str;
  */
 class UserFactory extends Factory
 {
-    /**
-     * The current password being used by the factory.
-     */
     protected static ?string $password;
 
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
+            'name' => $this->faker->name(),
+            'email' => $this->faker->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
+            'nid' => $this->generateUniqueNid(),
+            'birth_date' => $this->faker->date('Y-m-d', '-18 years'),
+            'phone_number' => $this->generateBangladeshiPhoneNumber(),
         ];
     }
 
-    /**
-     * Indicate that the model's email address should be unverified.
-     */
     public function unverified(): static
     {
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
         ]);
+    }
+
+    public function minor(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'birth_date' => $this->faker->date('Y-m-d', '-17 years'),
+        ]);
+    }
+
+    public function senior(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'birth_date' => $this->faker->date('Y-m-d', '-60 years'),
+        ]);
+    }
+
+    protected function generateUniqueNid(): string
+    {
+        return $this->faker->unique()->numerify('##########');
+    }
+
+    protected function generateBangladeshiPhoneNumber(): string
+    {
+        $prefixes = ['013', '014', '015', '016', '017', '018', '019'];
+        $prefix = $this->faker->randomElement($prefixes);
+        $number = $this->faker->numerify('########');
+        return $prefix . $number;
     }
 }

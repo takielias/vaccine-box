@@ -18,12 +18,17 @@ class MinimumAgeRule implements ValidationRule
     /**
      * Run the validation rule.
      *
-     * @param  \Closure(string, ?string=): \Illuminate\Translation\PotentiallyTranslatedString  $fail
+     * @param \Closure(string, ?string=): \Illuminate\Translation\PotentiallyTranslatedString $fail
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        //
-        $birthDate = Carbon::parse($value);
+        try {
+            $birthDate = Carbon::parse($value);
+        } catch (\Exception $e) {
+            $fail("The {$attribute} is not a valid date.");
+            return;
+        }
+
         $age = $birthDate->age;
 
         if ($age < $this->minAge) {

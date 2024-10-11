@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Contracts\Services\VaccinationStatusServiceInterface;
 use App\Contracts\Services\VaccineRegistrationServiceInterface;
-use App\Exceptions\NoAvailableDatesException;
-use App\Exceptions\RegistrationFailedException;
 use App\Http\Requests\VaccineRegistrationRequest;
 use App\Http\Requests\ValidVaccinationStatusSearchRequest;
-use Takielias\Lab\Facades\Lab;
 
 class VaccinationController extends Controller
 {
-    public function __construct(private readonly VaccineRegistrationServiceInterface $vaccineRegistration)
+    public function __construct(
+        private readonly VaccineRegistrationServiceInterface $vaccineRegistration,
+        private readonly VaccinationStatusServiceInterface   $vaccinationStatusService
+    )
     {
     }
 
@@ -35,6 +36,6 @@ class VaccinationController extends Controller
     function searchVaccinationStatus(ValidVaccinationStatusSearchRequest $request)
     {
         $validated = $request->validated();
-        return $this->vaccineRegistration->getVaccinationStatus($validated);
+        return $this->vaccinationStatusService->getVaccinationStatus($validated);
     }
 }
